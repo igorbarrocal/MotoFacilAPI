@@ -36,7 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\Exceptions\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 
