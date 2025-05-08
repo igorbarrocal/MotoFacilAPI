@@ -18,7 +18,7 @@ namespace MotoFacil.Data
         {
             modelBuilder.Entity<User>(entity =>
             {
-                entity.ToTable("USERS"); // Nome da tabela no Oracle
+                entity.ToTable("USERS"); 
 
                 entity.HasKey(e => e.Id);
 
