@@ -1,6 +1,7 @@
-
 using Microsoft.EntityFrameworkCore;
-using MotoFacil.Models;
+using MotoFacil.Models; // User
+using MotoFacil.Domain.Entities;
+
 
 namespace MotoFacil.Data
 {
@@ -11,14 +12,27 @@ namespace MotoFacil.Data
         {
         }
 
-        public DbSet<User> Users { get; set; }
+        public AppDbContext(DbSet<Moto> motos)
+        {
+            Motos = motos;
+        }
 
-        // Opcional: configurações manuais de mapeamento
+        public DbSet<User> Users { get; set; }
+        public DbSet<Moto> Motos { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            ConfigureUserEntity(modelBuilder);
+            ConfigureMotoEntity(modelBuilder);
+        }
+
+        private void ConfigureUserEntity(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>(entity =>
             {
-                entity.ToTable("USERS"); 
+                entity.ToTable("USERS");
 
                 entity.HasKey(e => e.Id);
 
@@ -34,6 +48,39 @@ namespace MotoFacil.Data
                       .HasColumnName("PASSWORD")
                       .IsRequired()
                       .HasMaxLength(100);
+            });
+        }
+
+        private void ConfigureMotoEntity(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Moto>(entity =>
+            {
+                entity.ToTable("MOTOS");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                      .HasColumnName("ID");
+
+                entity.Property(e => e.Placa)
+                      .HasColumnName("PLACA")
+                      .IsRequired()
+                      .HasMaxLength(10);
+
+                entity.Property(e => e.Modelo)
+                      .HasColumnName("MODELO")
+                      .IsRequired()
+                      .HasMaxLength(50);
+
+                entity.Property(e => e.Cor)
+                      .HasColumnName("COR")
+                      .IsRequired()
+                      .HasMaxLength(20);
+
+                entity.Property(e => e.Categoria)
+                      .HasColumnName("CATEGORIA")
+                      .IsRequired()
+                      .HasMaxLength(20);
             });
         }
     }
