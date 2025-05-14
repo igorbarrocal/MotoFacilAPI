@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using MotoFacil.Data;
 using MotoFacil.Domain.Entities;
 
@@ -89,6 +89,4 @@ namespace MotoFacil.Controllers
             return NoContent();
         }
     }
-}
-
 }
