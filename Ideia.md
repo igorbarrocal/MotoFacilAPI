@@ -1,5 +1,5 @@
 # 📄 IDEIA DO PROJETO - CP2 - ADVANCED BUSINESS DEVELOPMENT WITH .NET
-Criar uma API RESTful em .NET 8 com foco em cadastro e login de usuários, utilizando autenticação segura e arquitetura limpa, que será a base do sistema da Mottu para gestão de motos em pátios.
+Criar uma API RESTful em .NET 8 com foco em cadastro e login de usuários e cadastro da moto com a situação dela, utilizando autenticação segura e arquitetura limpa, que será a base do sistema da Mottu para gestão de motos em pátios.
 ## 👥 INTEGRANTES DO GRUPO
 
 - RM558238 - Cauan da Cruz Ferreira
@@ -26,11 +26,7 @@ Desenvolveremos uma aplicação robusta baseada na **API MotoFacilAPI** para reg
 O sistema permitirá:
 
 - Cadastro de usuários com login e autenticação segura  
-- Registro de motos com dados como placa, modelo, cor e status  
-- Associação da moto a uma posição exata dentro do pátio  
-- Visualização da planta do pátio com mapa interativo  
-- Filtragem e busca de motos por chassi, placa ou zona  
-- Geração de relatórios operacionais  
+- Registro de motos com dados como placa, modelo, cor 
 
 A solução ainda prevê integração futura com sensores ESP32 para mapeamento físico do pátio em tempo real e visão computacional para leitura automática de placas.
 
@@ -39,10 +35,7 @@ A solução ainda prevê integração futura com sensores ESP32 para mapeamento 
 ## 📐 ENTIDADES PRINCIPAIS
 
 - **Usuário**: dados de autenticação e controle de acesso  
-- **Moto**: placa, modelo, cor, status, localização atual  
-- **Pátio**: nome da filial, dimensões, zonas mapeadas  
-- **Zona**: subdivisão interna do pátio (ex: A, B, C)  
-- **Localização**: coordenadas reais e virtuais no mapa  
+- **Moto**: placa, modelo, cor
 
 ---
 
