@@ -1,7 +1,9 @@
 # MotoFácil API 🚀
 
-API RESTful desenvolvida em ASP.NET Core com Entity Framework Core e banco de dados Oracle.  
-Essa API realiza o cadastro e login de usuários, utilizando apenas **usuário e senha**, com documentação via Swagger.
+API RESTful desenvolvida em ASP.NET Core, utilizando Entity Framework Core e banco de dados Oracle.
+Esta API permite o cadastro e login de usuários, utilizando apenas usuário e senha, e também a gestão de motos no sistema.
+
+Conta com documentação interativa via Swagger para facilitar testes e integração.
 
 ---
 
@@ -24,6 +26,13 @@ Essa API realiza o cadastro e login de usuários, utilizando apenas **usuário e
 - ✅ Busca de usuário por nome
 - ✅ Atualização de usuários
 - ✅ Exclusão de usuários
+- ✅ Cadastro de motos
+- ✅ Consulta de todas as motos
+- ✅ Consulta de moto por ID
+- ✅ Atualização de motos
+- ✅ Exclusão de motos
+
+
 
 ---
 
@@ -35,9 +44,19 @@ Essa API realiza o cadastro e login de usuários, utilizando apenas **usuário e
 | POST   | /api/auth/login       | Login de usuário                      |
 | GET    | /api/user             | Listar todos os usuários              |
 | GET    | /api/user/{id}        | Buscar usuário por ID                 |
-| GET    | /api/user/search?username={nome} | Buscar usuário por nome         |
+| GET    | /api/user/search?username={nome} | Buscar usuário por nome    |
 | PUT    | /api/user/{id}        | Atualizar usuário                     |
 | DELETE | /api/user/{id}        | Deletar usuário                       |
+
+| Método | Rota        | Descrição                                  |
+| ------ | ----------- | ------------------------------------------ |
+| GET    | /motos      | Lista todas as motos cadastradas           |
+| GET    | /motos/{id} | Retorna os detalhes de uma moto específica |
+| POST   | /motos      | Adiciona uma nova moto ao sistema          |
+| PUT    | /motos/{id} | Atualiza as informações de uma moto        |
+| DELETE | /motos/{id} | Remove uma moto do sistema                 |
+
+
 
 ---
 
