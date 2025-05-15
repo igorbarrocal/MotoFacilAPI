@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MotoFacil.Data;
 using MotoFacil.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace MotoFacil.Controllers
 {
@@ -18,7 +18,7 @@ namespace MotoFacil.Controllers
 
         // GET: api/user
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
+        public async Task<ActionResult<IEnumerable<User>>> GetAll()
         {
             var users = await _context.Users.ToListAsync();
             return Ok(users);
@@ -26,49 +26,38 @@ namespace MotoFacil.Controllers
 
         // GET: api/user/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUserById(int id)
+        public async Task<ActionResult<User>> GetById(int id)
         {
             var user = await _context.Users.FindAsync(id);
-            if (user == null)
-                return NotFound("Usuário não encontrado.");
-
-            return Ok(user);
-        }
-
-        // GET: api/user/search?username=admin
-        [HttpGet("search")]
-        public async Task<ActionResult<User>> SearchByUsername([FromQuery] string username)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
-            if (user == null)
-                return NotFound("Usuário não encontrado.");
-
-            return Ok(user);
+            return user == null ? NotFound("Usuário não encontrado.") : Ok(user);
         }
 
         // POST: api/user
         [HttpPost]
-        public async Task<ActionResult<User>> CreateUser([FromBody] User user)
+        public async Task<ActionResult<User>> Create([FromBody] User user)
         {
             if (string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.Password))
-                return BadRequest("Usuário ou senha inválido.");
+                return BadRequest("Usuário e senha são obrigatórios.");
 
-            var exists = await _context.Users.AnyAsync(u => u.Username == user.Username);
+            // Verifica se já existe usuário com esse username
+            var exists = await _context.Users
+                .AnyAsync(u => u.Username == user.Username);
+
             if (exists)
                 return Conflict("Usuário já cadastrado.");
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
+            return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
         }
 
         // PUT: api/user/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] User updatedUser)
+        public async Task<IActionResult> Update(int id, [FromBody] User updatedUser)
         {
             if (id != updatedUser.Id)
-                return BadRequest("ID do usuário não confere.");
+                return BadRequest("ID não confere.");
 
             var user = await _context.Users.FindAsync(id);
             if (user == null)
@@ -78,13 +67,12 @@ namespace MotoFacil.Controllers
             user.Password = updatedUser.Password;
 
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
 
         // DELETE: api/user/{id}
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
@@ -92,7 +80,6 @@ namespace MotoFacil.Controllers
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
     }

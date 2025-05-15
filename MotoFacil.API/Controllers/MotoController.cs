@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MotoFacil.Data;
 using MotoFacil.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace MotoFacil.Controllers
 {

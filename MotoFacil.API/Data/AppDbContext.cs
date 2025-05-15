@@ -1,7 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using MotoFacil.Models; // User
+﻿using Microsoft.EntityFrameworkCore;
+using MotoFacil.Models;
 using MotoFacil.Domain.Entities;
-
 
 namespace MotoFacil.Data
 {
@@ -12,18 +11,12 @@ namespace MotoFacil.Data
         {
         }
 
-        public AppDbContext(DbSet<Moto> motos)
-        {
-            Motos = motos;
-        }
-
         public DbSet<User> Users { get; set; }
         public DbSet<Moto> Motos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
             ConfigureUserEntity(modelBuilder);
             ConfigureMotoEntity(modelBuilder);
         }
@@ -35,7 +28,6 @@ namespace MotoFacil.Data
                 entity.ToTable("USERS");
 
                 entity.HasKey(e => e.Id);
-
                 entity.Property(e => e.Id)
                       .HasColumnName("ID");
 
@@ -58,9 +50,7 @@ namespace MotoFacil.Data
                 entity.ToTable("MOTOS");
 
                 entity.HasKey(e => e.Id);
-
-                entity.Property(e => e.Id)
-                      .HasColumnName("ID");
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Placa)
                       .HasColumnName("PLACA")

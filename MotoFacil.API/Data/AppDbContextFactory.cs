@@ -2,15 +2,18 @@
 using Microsoft.EntityFrameworkCore.Design;
 using MotoFacil.Data;
 
-public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+namespace MotoFacil
 {
-    public AppDbContext CreateDbContext(string[] args)
+    public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     {
-        var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+        public AppDbContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 
-        // ⛽ String de conexão diretamente aqui:
-        optionsBuilder.UseOracle("User Id=RM555217;Password=020306;Data Source=localhost:1521/XE;");
+            // 🔐 Substitua com sua string real de conexão Oracle
+            optionsBuilder.UseOracle("Data Source=oracle.fiap.com.br:1521/orcl;User ID=RM555217;Password=020306;");
 
-        return new AppDbContext(optionsBuilder.Options);
+            return new AppDbContext(optionsBuilder.Options);
+        }
     }
 }

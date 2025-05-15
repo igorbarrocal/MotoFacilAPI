@@ -11,7 +11,7 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace MotoFacil.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250508110910_InitialCreate")]
+    [Migration("20250515140104_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -19,10 +19,48 @@ namespace MotoFacil.API.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("MotoFacil.Domain.Entities.Moto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)")
+                        .HasColumnName("ID");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Categoria")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("NVARCHAR2(20)")
+                        .HasColumnName("CATEGORIA");
+
+                    b.Property<string>("Cor")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("NVARCHAR2(20)")
+                        .HasColumnName("COR");
+
+                    b.Property<string>("Modelo")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)")
+                        .HasColumnName("MODELO");
+
+                    b.Property<string>("Placa")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("NVARCHAR2(10)")
+                        .HasColumnName("PLACA");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MOTOS", (string)null);
+                });
 
             modelBuilder.Entity("MotoFacil.Models.User", b =>
                 {
