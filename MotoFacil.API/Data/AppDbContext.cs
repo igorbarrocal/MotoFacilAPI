@@ -27,19 +27,16 @@ namespace MotoFacil.Data
             {
                 entity.ToTable("USERS");
 
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id)
+                entity.HasKey(u => u.Id);
+                entity.Property(u => u.Id)
                       .HasColumnName("ID");
 
-                entity.Property(e => e.Username)
-                      .HasColumnName("USERNAME")
+                entity.Property(u => u.Username)
+                      .HasColumnName("Username")
                       .IsRequired()
                       .HasMaxLength(100);
 
-                entity.Property(e => e.Password)
-                      .HasColumnName("PASSWORD")
-                      .IsRequired()
-                      .HasMaxLength(100);
+                // outros campos conforme sua classe User
             });
         }
 
@@ -49,28 +46,16 @@ namespace MotoFacil.Data
             {
                 entity.ToTable("MOTOS");
 
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.HasKey(m => m.Id);
+                entity.Property(m => m.Id)
+                      .HasColumnName("ID");
 
-                entity.Property(e => e.Placa)
+                entity.Property(m => m.Placa)
                       .HasColumnName("PLACA")
                       .IsRequired()
-                      .HasMaxLength(10);
-
-                entity.Property(e => e.Modelo)
-                      .HasColumnName("MODELO")
-                      .IsRequired()
-                      .HasMaxLength(50);
-
-                entity.Property(e => e.Cor)
-                      .HasColumnName("COR")
-                      .IsRequired()
                       .HasMaxLength(20);
 
-                entity.Property(e => e.Categoria)
-                      .HasColumnName("CATEGORIA")
-                      .IsRequired()
-                      .HasMaxLength(20);
+                // outros campos conforme sua classe Moto
             });
         }
     }

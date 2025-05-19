@@ -2,10 +2,14 @@
 {
     public class Moto
     {
-        public int Id { get; set; }
-        public string Placa { get; set; } = string.Empty;
-        public string Modelo { get; set; } = string.Empty;
-        public string Cor { get; set; } = string.Empty;
-        public string Categoria { get; set; } = string.Empty;
+        public int Id;
+
+
+        public string Modelo { get; set; }
+        public string Placa { get; set; }
+        public string Chassi { get; set; }
+        public string Status { get; set; }
+
+        public int GetId() => Id;
     }
 }
