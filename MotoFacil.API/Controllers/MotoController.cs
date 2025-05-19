@@ -16,7 +16,7 @@ namespace MotoFacil.Controllers
             _context = context;
         }
 
-        // POST: api/moto
+        
         [HttpPost]
         public IActionResult CadastrarMoto([FromBody] Moto moto)
         {
@@ -29,7 +29,7 @@ namespace MotoFacil.Controllers
             return CreatedAtAction(nameof(ObterPorId), new { id = moto.Id }, moto);
         }
 
-        // GET: api/moto
+      
         [HttpGet]
         public IActionResult Listar()
         {
@@ -37,7 +37,6 @@ namespace MotoFacil.Controllers
             return Ok(motos);
         }
 
-        // GET: api/moto/5
         [HttpGet("{id}")]
         public IActionResult ObterPorId(int id)
         {
@@ -48,7 +47,7 @@ namespace MotoFacil.Controllers
             return Ok(moto);
         }
 
-        // GET: api/moto/buscarPorPlaca?placa=XYZ1234
+        
         [HttpGet("buscarPorPlaca")]
         public IActionResult BuscarPorPlaca([FromQuery] string placa)
         {
@@ -59,7 +58,7 @@ namespace MotoFacil.Controllers
             return Ok(moto);
         }
 
-        // PUT: api/moto/5
+        
         [HttpPut("{id}")]
         public IActionResult AtualizarMoto(int id, [FromBody] Moto motoAtualizada)
         {
@@ -76,7 +75,7 @@ namespace MotoFacil.Controllers
             return NoContent(); // 204
         }
 
-        // DELETE: api/moto/5
+       
         [HttpDelete("{id}")]
         public IActionResult DeletarMoto(int id)
         {

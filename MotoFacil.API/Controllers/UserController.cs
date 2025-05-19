@@ -2,6 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using MotoFacil.Data;
 using MotoFacil.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MotoFacil.Controllers
 {
@@ -16,7 +19,6 @@ namespace MotoFacil.Controllers
             _context = context;
         }
 
-        // GET: api/user
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetAll()
         {
@@ -24,7 +26,6 @@ namespace MotoFacil.Controllers
             return Ok(users);
         }
 
-        // GET: api/user/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetById(int id)
         {
@@ -32,27 +33,37 @@ namespace MotoFacil.Controllers
             return user == null ? NotFound("Usuário não encontrado.") : Ok(user);
         }
 
-        // POST: api/user
         [HttpPost]
-        public async Task<ActionResult<User>> Create([FromBody] User user)
+        public async Task<IActionResult> Create([FromBody] User user)
         {
-            if (string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.Password))
-                return BadRequest("Usuário e senha são obrigatórios.");
+            try
+            {
+                if (string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.Password))
+                    return BadRequest("Usuário e senha são obrigatórios.");
 
-            // Verifica se já existe usuário com esse username
-            var exists = await _context.Users
-                .AnyAsync(u => u.Username == user.Username);
+                var existingUser = await _context.Users
+                    .Where(u => u.Username.ToLower() == user.Username.ToLower())
+                    .Select(u => u.Id)
+                    .FirstOrDefaultAsync();
 
-            if (exists)
-                return Conflict("Usuário já cadastrado.");
+                if (existingUser != 0)
+                    return Conflict("Usuário já cadastrado.");
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
+                return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
+            }
+            catch (DbUpdateException ex)
+            {
+                return StatusCode(500, "Erro ao salvar no banco de dados Oracle: " + ex.Message);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, "Erro interno: " + ex.Message);
+            }
         }
 
-        // PUT: api/user/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] User updatedUser)
         {
@@ -66,11 +77,17 @@ namespace MotoFacil.Controllers
             user.Username = updatedUser.Username;
             user.Password = updatedUser.Password;
 
-            await _context.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (DbUpdateException ex)
+            {
+                return StatusCode(500, "Erro ao atualizar no banco Oracle: " + ex.Message);
+            }
         }
 
-        // DELETE: api/user/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -79,8 +96,16 @@ namespace MotoFacil.Controllers
                 return NotFound("Usuário não encontrado.");
 
             _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-            return NoContent();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (DbUpdateException ex)
+            {
+                return StatusCode(500, "Erro ao deletar no banco Oracle: " + ex.Message);
+            }
         }
     }
 }
