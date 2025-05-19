@@ -3,7 +3,6 @@ using MotoFacil.Data;
 using MotoFacil.Domain.Entities;
 using MotoFacil.DTOs;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace MotoFacil.Controllers
 {
@@ -12,91 +11,107 @@ namespace MotoFacil.Controllers
     public class MotoController : ControllerBase
     {
         private readonly AppDbContext _context;
+        public MotoController(AppDbContext context) => _context = context;
 
-        public MotoController(AppDbContext context)
-        {
-            _context = context;
-        }
-
+        // POST
         [HttpPost]
-        public IActionResult CadastrarMoto([FromBody] MotoDto dto)
+        public IActionResult Cadastrar([FromBody] MotoCreateDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest("Dados inválidos");
+            if (!ModelState.IsValid) return BadRequest("Dados inválidos");
 
-            var moto = dto.ToEntity();
+            var moto = new Moto { Modelo = dto.Modelo, Placa = dto.Placa, Chassi = dto.Chassi, Status = dto.Status };
+
             _context.Motos.Add(moto);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(ObterPorId), new { id = moto.GetId() }, MapToReadDto(moto));
+            return CreatedAtAction(nameof(ObterPorId), new { id = moto.Id }, new MotoReadDto
+            {
+                Id = moto.Id,
+                Modelo = moto.Modelo,
+                Placa = moto.Placa,
+                Chassi = moto.Chassi,
+                Status = moto.Status
+            });
         }
 
+        // GET: Todos
         [HttpGet]
-        public IActionResult Listar()
+        public IActionResult Listar() =>
+            Ok(_context.Motos.AsNoTracking().Select(m => new MotoReadDto
+            {
+                Id = m.Id,
+                Modelo = m.Modelo,
+                Placa = m.Placa,
+                Chassi = m.Chassi,
+                Status = m.Status
+            }));
+
+        // GET: Por ID
+        [HttpGet("{id}")]
+        public IActionResult ObterPorId(int id)
+        {
+            var moto = _context.Motos.AsNoTracking().FirstOrDefault(m => m.Id == id);
+            if (moto == null) return NotFound("Moto não encontrada");
+
+            return Ok(new MotoReadDto
+            {
+                Id = moto.Id,
+                Modelo = moto.Modelo,
+                Placa = moto.Placa,
+                Chassi = moto.Chassi,
+                Status = moto.Status
+            });
+        }
+
+        // GET: Buscar por modelo
+        [HttpGet("buscar")]
+        public IActionResult BuscarPorModelo([FromQuery] string modelo)
         {
             var motos = _context.Motos
-                .AsNoTracking()
-                .ToList()
-                .Select(m => MapToReadDto(m))
+                .Where(m => m.Modelo.Contains(modelo))
+                .Select(m => new MotoReadDto
+                {
+                    Id = m.Id,
+                    Modelo = m.Modelo,
+                    Placa = m.Placa,
+                    Chassi = m.Chassi,
+                    Status = m.Status
+                })
                 .ToList();
 
             return Ok(motos);
         }
 
-        [HttpGet("{id}")]
-        public IActionResult ObterPorId(int id)
-        {
-            var moto = _context.Motos
-                .AsNoTracking()
-                .FirstOrDefault(m => m.GetId() == id);
-
-            if (moto == null)
-                return NotFound("Moto não encontrada");
-
-            return Ok(MapToReadDto(moto));
-        }
-
+        // PUT: Atualizar
         [HttpPut("{id}")]
-        public IActionResult AtualizarMoto(int id, [FromBody] MotoDto dto)
+        public IActionResult Atualizar(int id, [FromBody] MotoCreateDto dto)
         {
-            var moto = _context.Motos.FirstOrDefault(m => m.GetId() == id);
-            if (moto == null)
-                return NotFound("Moto não encontrada para atualização");
+            if (!ModelState.IsValid) return BadRequest("Dados inválidos");
+
+            var moto = _context.Motos.FirstOrDefault(m => m.Id == id);
+            if (moto == null) return NotFound("Moto não encontrada");
 
             moto.Modelo = dto.Modelo;
             moto.Placa = dto.Placa;
             moto.Chassi = dto.Chassi;
             moto.Status = dto.Status;
-            moto.SetUserId(dto.UserId); // ← usando setter público
 
             _context.SaveChanges();
+
             return NoContent();
         }
 
+        // DELETE
         [HttpDelete("{id}")]
-        public IActionResult DeletarMoto(int id)
+        public IActionResult Deletar(int id)
         {
-            var moto = _context.Motos.FirstOrDefault(m => m.GetId() == id);
-            if (moto == null)
-                return NotFound("Moto não encontrada para exclusão");
+            var moto = _context.Motos.FirstOrDefault(m => m.Id == id);
+            if (moto == null) return NotFound("Moto não encontrada");
 
             _context.Motos.Remove(moto);
             _context.SaveChanges();
 
             return NoContent();
-        }
-
-        private MotoReadDto MapToReadDto(Moto moto)
-        {
-            return new MotoReadDto
-            {
-                Id = moto.GetId(),
-                Modelo = moto.Modelo,
-                Placa = moto.Placa,
-                Chassi = moto.Chassi,
-                Status = moto.Status,
-                UserId = moto.GetUserId()
-            };
         }
     }
 }

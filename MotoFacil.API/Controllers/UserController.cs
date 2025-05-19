@@ -1,82 +1,76 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MotoFacil.Data;
-using MotoFacil.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using MotoFacil.Domain.Entities;
+using MotoFacil.DTOs;
 
 namespace MotoFacil.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    [Route("api/users")]
+    public class UsersController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public UserController(AppDbContext context)
+        public UsersController(AppDbContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetAll()
+        public IActionResult GetAll()
         {
-            var users = await _context.Users.ToListAsync();
+            var users = _context.Users
+
+                .Select(static u => new UserCreateDto
+                {
+                    Id = u.Id,
+                    Username = u.Username
+                })
+                .ToList();
+
             return Ok(users);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetById(int id)
+        public IActionResult GetById(int id)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var user = _context.Users.Find(id);
+            if (user == null) return NotFound();
 
-            return user == null ? NotFound("Usuário não encontrado.") : Ok(user);
+            var dto = new UserReadDto
+            {
+                Id = user.Id,
+                Username = user.Username
+            };
+
+            return Ok(dto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] User user)
+        public IActionResult Create(UserCreateDto dto)
         {
-            if (string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.Password))
-                return BadRequest("Usuário e senha são obrigatórios.");
-
-            var existingUser = await _context.Users
-                .FirstOrDefaultAsync(u => u.Username.ToLower() == user.Username.ToLower());
-
-            if (existingUser != null)
-                return Conflict("Usuário já cadastrado.");
-
+            var user = new User(dto.Username, dto.Senha);
             _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
-            return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
-        }
+            var readDto = new UserReadDto
+            {
+                Id = user.Id,
+                Username = user.Username
+            };
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] User updatedUser)
-        {
-            if (id != updatedUser.Id)
-                return BadRequest("ID não confere.");
-
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
-            if (user == null)
-                return NotFound("Usuário não encontrado.");
-
-            user.Username = updatedUser.Username;
-            user.Password = updatedUser.Password;
-
-            await _context.SaveChangesAsync();
-            return NoContent();
+            return CreatedAtAction(nameof(GetById), new { id = user.Id }, readDto);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public IActionResult Delete(int id)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
-            if (user == null)
-                return NotFound("Usuário não encontrado.");
+            var user = _context.Users.Find(id);
+            if (user == null) return NotFound();
 
             _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
+
             return NoContent();
         }
     }

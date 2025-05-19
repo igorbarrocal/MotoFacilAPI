@@ -2,14 +2,26 @@
 {
     public class Moto
     {
-        public int Id;
+        public int Id { get; private set; } 
 
+        public string Modelo { get; set; } = string.Empty;
+        public string Placa { get; set; } = string.Empty;
+        public string Chassi { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
 
-        public string Modelo { get; set; }
-        public string Placa { get; set; }
-        public string Chassi { get; set; }
-        public string Status { get; set; }
+       
 
-        public int GetId() => Id;
+        
+        public Moto() { }
+
+        
+        public Moto(string modelo, string placa, string chassi, string status, int userId)
+        {
+            Modelo = modelo;
+            Placa = placa;
+            Chassi = chassi;
+            Status = status;
+            
+        }
     }
 }

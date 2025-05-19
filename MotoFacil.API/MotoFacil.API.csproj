@@ -16,6 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="DTOs\MotoDto.cs" />
+    <Compile Remove="DTOs\UserDto.cs" />
     <Compile Remove="Migrations\20250515122910_initial.cs" />
     <Compile Remove="Migrations\20250515122910_initial.Designer.cs" />
     <Compile Remove="Migrations\AppDbContextModelSnapshot.cs" />

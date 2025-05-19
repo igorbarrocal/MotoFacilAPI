@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MotoFacil.Models;
 using MotoFacil.Domain.Entities;
 
 namespace MotoFacil.Data
