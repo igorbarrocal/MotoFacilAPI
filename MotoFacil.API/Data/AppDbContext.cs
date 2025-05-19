@@ -35,7 +35,7 @@ namespace MotoFacil.Data
                       .IsRequired()
                       .HasMaxLength(100);
 
-                // outros campos conforme sua classe User
+               
             });
         }
 
@@ -54,7 +54,7 @@ namespace MotoFacil.Data
                       .IsRequired()
                       .HasMaxLength(20);
 
-                // outros campos conforme sua classe Moto
+                
             });
         }
     }

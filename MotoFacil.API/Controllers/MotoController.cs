@@ -34,7 +34,7 @@ namespace MotoFacil.Controllers
             });
         }
 
-        // GET: Todos
+        // GET
         [HttpGet]
         public IActionResult Listar() =>
             Ok(_context.Motos.AsNoTracking().Select(m => new MotoReadDto
@@ -46,7 +46,7 @@ namespace MotoFacil.Controllers
                 Status = m.Status
             }));
 
-        // GET: Por ID
+        // GET
         [HttpGet("{id}")]
         public IActionResult ObterPorId(int id)
         {
@@ -63,7 +63,7 @@ namespace MotoFacil.Controllers
             });
         }
 
-        // GET: Buscar por modelo
+        // GET
         [HttpGet("buscar")]
         public IActionResult BuscarPorModelo([FromQuery] string modelo)
         {
@@ -82,7 +82,7 @@ namespace MotoFacil.Controllers
             return Ok(motos);
         }
 
-        // PUT: Atualizar
+        // PUT
         [HttpPut("{id}")]
         public IActionResult Atualizar(int id, [FromBody] MotoCreateDto dto)
         {
