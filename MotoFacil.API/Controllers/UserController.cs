@@ -37,7 +37,7 @@ namespace MotoFacil.Controllers
             var user = _context.Users.Find(id);
             if (user == null) return NotFound();
 
-            var dto = new UserReadDto
+            var dto = new UserCreateDto
             {
                 Id = user.Id,
                 Username = user.Username
