@@ -44,7 +44,6 @@ Conta com documentação interativa via Swagger para facilitar testes e integra�
 | POST   | /api/auth/login       | Login de usuário                      |
 | GET    | /api/user             | Listar todos os usuários              |
 | GET    | /api/user/{id}        | Buscar usuário por ID                 |
-| GET    | /api/user/search?username={nome} | Buscar usuário por nome    |
 | PUT    | /api/user/{id}        | Atualizar usuário                     |
 | DELETE | /api/user/{id}        | Deletar usuário                       |
 
